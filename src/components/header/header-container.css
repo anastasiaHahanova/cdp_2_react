@@ -1,0 +1,28 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0 2px 10px #eee;
+  padding: 0 5%;
+}
+
+.header__nav {
+  display: flex;
+  align-items: center;
+}
+
+.header__nav-home {
+  display: flex;
+  align-items: center;
+}
+
+.header__nav-home-title {
+  margin: 0 30px 0 10px;
+}
+
+.header__nav-home img {
+  width: 80px;
+}
+
+.header__auth {
+  align-self: center;
+}
