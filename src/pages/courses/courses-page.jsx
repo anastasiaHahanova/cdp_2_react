@@ -5,7 +5,7 @@ import './courses-page.scss';
 
 const CoursesPage = () => {
   return (
-    <section class="cards-wrapper">
+    <section className="cards-wrapper">
       <CourseCard/>
       <CourseCard/>
       <CourseCard/>

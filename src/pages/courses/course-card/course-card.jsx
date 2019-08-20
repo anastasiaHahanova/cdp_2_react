@@ -23,7 +23,7 @@ const CourseCard = () => {
   const classes = useStyles();
 
   return (
-    <div class="card">
+    <div className="card">
       <Card className={classes.card}>
         <CardActionArea>
           <CardMedia
