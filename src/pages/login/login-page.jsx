@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Input from '@material-ui/core/Input';
 
 import './login.scss';
@@ -8,7 +8,7 @@ const LoginPage = () => {
   return (
     <main className="login-section__container">
       <div className="login-section__wrapper">
-        <form className="login-section">
+        <form className="login-section shadow">
           <Input
             className="login-section__field"
             autoFocus="true"

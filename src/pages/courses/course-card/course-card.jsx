@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -39,12 +40,18 @@ const CourseCard = () => {
               Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
               across all continents except Antarctica
             </Typography>
+            <div className="card__time">
+            <span className="card__time-duration">15 min</span>
+            <span className="card__time-date">July 24</span>
+          </div>
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Button size="small" color="primary">
+          <Link className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall"
+            to="/courses/edit"
+            >
             Edit
-          </Button>
+           </Link>
           <Button size="small" color="primary">
             Delete
           </Button>

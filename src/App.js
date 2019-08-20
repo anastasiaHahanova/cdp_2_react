@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import CoursesPage from './pages/courses/courses-page';
 import CoursePage from './pages/course/course-page';
@@ -28,18 +28,9 @@ function Home() {
 function Courses({ match }) {
   return (
     <main>
-      <h2>Courses</h2>
-
-      <ul>
-        <li>
-          <Link to={`${match.url}/new`}>New Course</Link>
-        </li>
-        <li>
-          <Link to={`${match.url}/edit`}>Edit Course</Link>
-        </li>
-      </ul>
-
       <Route path={`${match.path}/:id`} component={CoursePage} />
+      <Route path={`${match.path}/new/:id`} component={CoursePage} />
+      <Route path={`${match.path}/edit/:id`} component={CoursePage} />
       <Route
         exact
         path={match.path}
