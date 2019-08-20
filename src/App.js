@@ -27,7 +27,7 @@ function Home() {
 
 function Courses({ match }) {
   return (
-    <div>
+    <main>
       <h2>Courses</h2>
 
       <ul>
@@ -45,7 +45,7 @@ function Courses({ match }) {
         path={match.path}
         component={CoursesPage}
       />
-    </div>
+    </main>
   );
 }
 

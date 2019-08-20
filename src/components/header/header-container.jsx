@@ -2,7 +2,8 @@ import React from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import logo from '../../logo.svg';
 
-import './header-container.css';
+// import './header-container.css';
+import './header-container.scss';
 
 const Header = () => {
   return (

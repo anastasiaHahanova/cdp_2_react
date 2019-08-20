@@ -1,0 +1,28 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0 2px 10px #eee;
+  padding: 0 5%;
+
+  &__nav {
+    display: flex;
+    align-items: center;
+
+    &-home {
+      display: flex;
+      align-items: center;
+
+      &-title {
+        margin: 0 30px 0 10px;
+      }
+
+      img {
+        width: 80px;
+      }
+    }
+  }
+
+  &__auth {
+    align-self: center;
+  }
+}

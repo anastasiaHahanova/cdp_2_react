@@ -23,3 +23,7 @@ a {
 a:hover {
   text-decoration: underline;
 }
+
+header, main {
+  padding: 0 5%;
+}

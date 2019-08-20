@@ -1,7 +1,16 @@
-import React from "react";
+import React from 'react';
+
+import CourseCard from './course-card/course-card';
+import './courses-page.scss';
 
 const CoursesPage = () => {
-  return <h3>Please select a Course.lol</h3>;
+  return (
+    <section class="cards-wrapper">
+      <CourseCard/>
+      <CourseCard/>
+      <CourseCard/>
+    </section>
+  );
 }
 
 export default CoursesPage;
