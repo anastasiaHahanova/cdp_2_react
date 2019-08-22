@@ -1,27 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import FormControl from '@material-ui/core/FormControl';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-
 import SimpleBreadcrumbs from '../../components/breadcrumbs/breadcrumbs';
+import Selector from '../../components/selector/selector';
+import {authors} from '../../store/authors';
+
 import './course-page.scss';
 
 const CoursePage = ({ match }) => {
-  const [state, setState] = useState({
-    gilad: true,
-    jason: false,
-    antoine: false,
-  });
-
-  const handleChange = name => event => {
-    setState({ ...state, [name]: event.target.checked });
-  };
-
-  const { gilad, jason, antoine } = state;
-
   return (
     <main>
       <SimpleBreadcrumbs courseId={match.params.id} />
@@ -66,25 +52,10 @@ const CoursePage = ({ match }) => {
           placeholder="write..."
         >
         </textarea>
-        <FormControl component="fieldset">
-          <legend className="course-form__description-title">Authors' List</legend>
-          <FormGroup>
-            <FormControlLabel
-              control={<Checkbox checked={gilad} onChange={handleChange('gilad')} value="gilad" />}
-              label="Gilad Gray"
-            />
-            <FormControlLabel
-              control={<Checkbox checked={jason} onChange={handleChange('jason')} value="jason" />}
-              label="Jason Killian"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox checked={antoine} onChange={handleChange('antoine')} value="antoine" />
-              }
-              label="Antoine Llorca"
-            />
-          </FormGroup>
-        </FormControl>
+
+        <legend className="course-form__description-title">Authors' List</legend>
+        <Selector options={authors} />
+
         <div className="course-form__buttons">
           <Button size="small" color="primary">
             Save
