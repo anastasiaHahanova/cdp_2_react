@@ -11,14 +11,13 @@ const LoginPage = () => {
         <form className="login-section shadow">
           <Input
             className="login-section__field"
-            autoFocus="true"
-            required="true"
+            autoFocus={true}
+            required={true}
           />
           <Input
             className="login-section__field"
             type="password"
-            autoFocus="true"
-            required="true" />
+            required={true} />
           <Link to="/courses" className="login-section__submit">Login</Link>
         </form>
       </div>

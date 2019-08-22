@@ -12,12 +12,12 @@ const Selector = ({ options }) => {
 
   const { allOptions, activeOptions } = state;
 
-  const chooseOption = ({
-    target: {
+  const chooseOption = ({ target }) => {
+    const {
       textContent: optionText,
       id: optionId,
-    },
-  }) => {
+    } = target;
+
     setState(state => {
       const { activeOptions } = state;
       if (activeOptions.some(({ id }) => id === optionId)) {

@@ -20,7 +20,7 @@ const useStyles = makeStyles({
   },
 });
 
-const CourseCard = () => {
+const CourseCard = ({ id }) => {
   const classes = useStyles();
 
   return (
@@ -41,23 +41,23 @@ const CourseCard = () => {
               across all continents except Antarctica
             </Typography>
             <div className="card__time">
-            <span className="card__time-duration">15 min</span>
-            <span className="card__time-date">July 24</span>
-          </div>
+              <span className="card__time-duration">15 min</span>
+              <span className="card__time-date">July 24</span>
+            </div>
           </CardContent>
         </CardActionArea>
         <CardActions>
           <Link className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall"
-            to="/courses/edit"
-            >
-            Edit
+            to={`/courses/edit/${id}`}
+          >
+          Edit
            </Link>
-          <Button size="small" color="primary">
-            Delete
+        <Button size="small" color="primary">
+          Delete
           </Button>
         </CardActions>
       </Card>
-    </div>
+    </div >
   );
 }
 
