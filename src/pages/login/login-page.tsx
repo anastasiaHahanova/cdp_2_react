@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { connect, useSelector, useDispatch } from 'react-redux';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { connect, useSelector } from 'react-redux';
+import { navigate } from 'hookrouter';
 import Input from '@material-ui/core/Input';
 
 import {
@@ -10,17 +11,12 @@ import {
 
 import './login.scss';
 
-const LOGIN_REGEX: RegExp = /^[a-zA-Z]+$/g;
-const PASSWORD_REGEX: RegExp = /^[a-zA-Z0-9]+$/g;
+const LOGIN_REGEX: RegExp = /^[a-zA-Z]+$/;
+const PASSWORD_REGEX: RegExp = /^[a-zA-Z0-9]+$/;
 const ERROR_EMPTY_LOGIN: string = 'Please enter the field login';
 const ERROR_EMPTY_PASSWORD: string = 'Please enter the field password';
-
-export interface LoginProps {
-  login: string,
-  password: string,
-  isValidLogin: boolean,
-  isValidPassword: boolean,
-}
+const ERROR_USER_NOT_EXIST: string = 'No user with such login';
+const ERROR_PASSWORD_NOT_MATCH: string = 'Wrong password';
 
 const LoginPage = () => {
   const [state, setState] = useState({
@@ -28,19 +24,18 @@ const LoginPage = () => {
     password: '',
     isValidLogin: true,
     isValidPassword: true,
+    isExistedUser: true,
+    isPasswordMatches: true,
+    isValid: false,
   });
 
-  const dispatch = useDispatch();
-  console.log('redux', useSelector(selectUser));
-  console.log('state', state);
+  const users = useSelector(selectUser);
 
   const onLoginChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
 
     if (value === '' || LOGIN_REGEX.test(value)) {
-      setState((state) => { 
-        return { ...state, login: value };
-      });
+      setState({ ...state, login: value });
     }
   };
 
@@ -48,20 +43,58 @@ const LoginPage = () => {
     const { value } = event.target;
 
     if (value === '' || PASSWORD_REGEX.test(value)) {
-      setState((state) => { 
-        return { ...state, password: value };
-      });
+      setState({ ...state, password: value });
     }
   };
 
   const onFieldBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
-    console.log('value', value);
+
     if (value === state.login) {
-      console.log('log', value);
       setState({ ...state, isValidLogin: !!value });
-    } else if (value === state.password) {console.log('pas', value);
+    } else if (value === state.password) {
       setState({ ...state, isValidPassword: !!value });
+    }
+  };
+
+  const verifyUser = () => {
+    const user = users[state.login];
+    const isExistedUser: boolean = !!user;
+    const isPasswordMatches: boolean = !user 
+      ? true 
+      : user.password === state.password;
+
+    setState({ 
+      ...state, 
+      isExistedUser, 
+      isPasswordMatches,
+    });
+  };
+
+  const validateForm = () => {
+    const { login, password } = state;
+
+    return (login === '' || LOGIN_REGEX.test(login))
+      && (password === '' || PASSWORD_REGEX.test(password))
+      && users[state.login] 
+      && users[state.login].password === state.password;
+  };
+
+  const onClickLogin = (event: any) => {
+    if(!validateForm()) {
+      event.preventDefault();
+    }
+
+    verifyUser();
+  };
+
+  const onKeyPressed = (event: any) => {
+    if(!validateForm()) {
+      event.preventDefault();
+    }
+
+    if (event.key === 'Enter') {
+      verifyUser();
     }
   };
 
@@ -69,19 +102,20 @@ const LoginPage = () => {
     <span className="error">{errorMessage}</span>
   );
 
+  const loginClassName: string = state.isValidLogin 
+    ? 'login-section__field'
+    : 'login-section__field login-section__field--error';
+
+  const passwordClassName: string = state.isValidPassword 
+    ? 'login-section__field'
+    : 'login-section__field login-section__field--error';
+
   return (
     <main className="login-section__container">
       <div className="login-section__wrapper">
         <form className="login-section shadow">
-        <button className="button is-primary" 
-          onClick={(e) => {
-            e.preventDefault();
-            dispatch(addUserAction({login:'tetss', password: 'kek'}));
-          }}>
-            Add
-        </button>
           <Input
-            className="login-section__field"
+            className={loginClassName}
             autoFocus={true}
             required={true}
             value={state.login}
@@ -90,7 +124,7 @@ const LoginPage = () => {
           />
           {state.isValidLogin ? '' : getErrorWrapper(ERROR_EMPTY_LOGIN)}
           <Input
-            className="login-section__field"
+            className={passwordClassName}
             type="password"
             required={true}
             value={state.password}
@@ -98,9 +132,13 @@ const LoginPage = () => {
             onBlur={onFieldBlur}
           />
           {state.isValidPassword ? '' : getErrorWrapper(ERROR_EMPTY_PASSWORD)}
+          {state.isExistedUser ? '' : getErrorWrapper(ERROR_USER_NOT_EXIST)}
+          {state.isPasswordMatches && state.isValidPassword ? '' : getErrorWrapper(ERROR_PASSWORD_NOT_MATCH)}
           <Link
             to="/courses"
             className="login-section__submit"
+            onClick={onClickLogin}
+            onKeyPress={onKeyPressed}
           >
             Login
           </Link>
@@ -110,11 +148,4 @@ const LoginPage = () => {
   );
 }
 
-const mapDispatchToProps: any = {
-  // addUser,
-};
-
-export default connect(
-  null,
-  mapDispatchToProps,
-)(LoginPage);
+export default connect()(LoginPage);
