@@ -1,23 +1,29 @@
 import {
   ADD_USER,
-  GET_USER,
+  // GET_USER,
 } from '../actions';
 
 const initialState = {
-  user1: {
+  hahanova: {
     login: 'hahanova',
     password: 'qwerty',
   }
 };
 
+//items: state.items.filter(user => user.id !== action.id)
+
 const usersCollection = new Map([
-  [ADD_USER, (state) => ({
+  // [ADD_USER, (state, {payload}) => ({
+  //   ...state,
+  //   user2: payload,
+  // })],
+
+  [ADD_USER, (state, { payload: { login, password } }) => ({
     ...state,
-    sequenceFieldsAmount: initialState.sequenceFieldsAmount,
-  })],
-  [GET_USER, (state) => ({
-    ...state,
-    sequenceFieldsAmount: initialState.sequenceFieldsAmount,
+    [login]: {
+      login: login,
+      password: password,
+    },
   })],
 ]);
 

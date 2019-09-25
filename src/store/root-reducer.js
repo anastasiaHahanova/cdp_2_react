@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { users } from './form-data';
+import { users } from './users';
 
 const rootReducer = combineReducers({
   users,
