@@ -12,3 +12,4 @@ const middlewares = composeWithDevTools(applyMiddleware(
 export default createStore(rootReducer, middlewares);
 
 export * from './users';
+export * from './courses';

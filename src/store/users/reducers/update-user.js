@@ -1,30 +1,71 @@
 import {
   ADD_USER,
-  // GET_USER,
+  SET_AUTHORIZED_USER,
+  LOGOUT,
 } from '../actions';
 
+import {
+  getAuthenticatedUser,
+  logout,
+  setAuthenticatedUser,
+} from '../../../helpers/auth';
+
 const initialState = {
-  hahanova: {
-    login: 'hahanova',
-    password: 'qwerty',
+  users: {
+    hahanova: {
+      login: 'hahanova',
+      password: 'qwerty',
+    },
+    godlevskyi: {
+      login: 'godlevskyi',
+      password: 'qwerty',
+    },
+  },
+  auth: {
+    authMessage: getAuthenticatedUser() ? 'logout' : 'login',
+    user: getAuthenticatedUser() || 'user',
   }
 };
 
-//items: state.items.filter(user => user.id !== action.id)
-
 const usersCollection = new Map([
-  // [ADD_USER, (state, {payload}) => ({
-  //   ...state,
-  //   user2: payload,
-  // })],
-
-  [ADD_USER, (state, { payload: { login, password } }) => ({
+  [ADD_USER, (state, {
+    payload: {
+      login,
+      password
+    }
+  }) => ({
     ...state,
-    [login]: {
-      login: login,
-      password: password,
+    users: {
+      [login]: {
+        login: login,
+        password: password,
+      },
     },
   })],
+
+  [SET_AUTHORIZED_USER, (state, { payload }) => {console.log(payload)
+    setAuthenticatedUser(payload);
+
+    return {
+      ...state,
+      auth: {
+        user: payload,
+        authMessage: 'logout',
+      },
+    }
+  }],
+
+  [LOGOUT, (state) => {console.log(2)
+    logout();
+
+    return {
+      ...state,
+      auth: {
+        user: 'user',
+        authMessage: 'login',
+      },
+    }
+  }],
 ]);
 
 export const users = (state = initialState, action) => {

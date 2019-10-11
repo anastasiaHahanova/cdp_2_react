@@ -1,8 +1,13 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import InputBase from '@material-ui/core/InputBase';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
+
+import {
+  selectCourses,
+} from '../../store';
 
 import CourseCard from './course-card/course-card';
 import './courses-page.scss';
@@ -49,6 +54,8 @@ const useStyles = makeStyles(theme => ({
 
 const CoursesPage = ({ match }) => {
   const classes = useStyles();
+  const courses = useSelector(selectCourses);
+
   return (
     <div>
       <section className="course-managing">
