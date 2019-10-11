@@ -1,12 +1,12 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import { Redirect } from 'react-router';
 
-let isAuthenticated = true;
+import { getAuthenticatedUser } from '../helpers/auth';
 
 const Authorization = WrappedComponent => {
   return class AuthorizationHOC extends Component {
     render() {
-      if (!isAuthenticated) {
+      if (!getAuthenticatedUser()) {
         return <Redirect to='/login' />
       }
 
