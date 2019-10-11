@@ -1,10 +1,33 @@
 import React, { useState } from "react";
 import './selector.scss';
 
-const ARROW_LEFT = '\u2190';
-const ARROW_RIGHT = '\u2192';
+const ARROW_LEFT: string = '\u2190';
+const ARROW_RIGHT: string = '\u2192';
 
-const Selector = ({ options }) => {
+interface OptionProps {
+  name: string,
+  id: string,
+}
+
+interface OptionsProps {
+  options: Array<OptionProps>,
+}
+
+interface StateProps {
+  allOptions: OptionsProps,
+  activeOptions: OptionsProps | Array<[]>,
+}
+
+interface IdProp {
+  id: string,
+}
+
+interface ToggleProps {
+  cancelOption: (event: React.MouseEvent<HTMLButtonElement>) => void,
+  chooseOption: (event: React.MouseEvent<HTMLButtonElement>) => void,
+}
+
+const Selector = ({ options }: OptionsProps) => {
   const [state, setState] = useState({
     allOptions: options,
     activeOptions: [],
@@ -12,15 +35,15 @@ const Selector = ({ options }) => {
 
   const { allOptions, activeOptions } = state;
 
-  const chooseOption = ({ target }) => {
+  const chooseOption = ({ target }: React.MouseEvent<HTMLButtonElement>) => {
     const {
       textContent: optionText,
       id: optionId,
-    } = target;
+    }: any = target;
 
-    setState(state => {
+    setState((state: any) => {
       const { activeOptions } = state;
-      if (activeOptions.some(({ id }) => id === optionId)) {
+      if (activeOptions.some(({ id }: IdProp) => id === optionId)) {
         return state;
       }
 
@@ -40,7 +63,7 @@ const Selector = ({ options }) => {
     target: {
       id: optionId,
     },
-  }) => {
+  }: any) => {
     setState(state => {
       const { activeOptions } = state;
       const updatedAllOptions = activeOptions.filter(({ id }) => id !== optionId);
@@ -52,7 +75,7 @@ const Selector = ({ options }) => {
     });
   };
 
-  const getOption = ({ name, id }, handler) => {
+  const getOption = ({ name, id }: OptionProps, handler: any) => {
     return (
       <li className="selector__item"
         onClick={handler}

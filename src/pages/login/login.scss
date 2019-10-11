@@ -48,5 +48,13 @@
 
   &__field {
     margin: 20px 0;
+
+    &--error input {
+      border-bottom: solid 2px red;
+    }
   }
+}
+
+.error {
+  color: red;
 }
