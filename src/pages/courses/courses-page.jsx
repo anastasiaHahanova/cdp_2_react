@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import InputBase from '@material-ui/core/InputBase';
@@ -55,6 +55,44 @@ const useStyles = makeStyles(theme => ({
 const CoursesPage = ({ match }) => {
   const classes = useStyles();
   const courses = useSelector(selectCourses);
+  const [state, setState] = useState({
+    courses: courses,
+  });
+
+  const renderCourses = () => {
+    return Object.keys(state.courses).map((key) => {
+      const {
+        authors,
+        creationDate,
+        description,
+        duration,
+        image,
+        title,
+      } = state.courses[key];
+
+      return (
+        <CourseCard
+          key={key}
+          id={key}
+          authors={authors}
+          imageSrc={image}
+          date={creationDate}
+          description={description}
+          duration={duration}
+          title={title}
+        />
+      );
+    });
+  };
+
+  const handleKeypress = ({key, target}) => {
+    if(key === 'Enter'){
+      const searchWord = target.value.toLowerCase();
+      const foundCourses = Object.values(courses).filter(course => course.title.toLowerCase().includes(searchWord));
+
+      setState({ ...state, courses: foundCourses });
+    }
+  };
 
   return (
     <div>
@@ -70,6 +108,7 @@ const CoursesPage = ({ match }) => {
               input: classes.inputInput,
             }}
             inputProps={{ 'aria-label': 'search' }}
+            onKeyPress={handleKeypress}
           />
         </div>
         <Link
@@ -80,9 +119,7 @@ const CoursesPage = ({ match }) => {
         </Link>
       </section>
       <section className="cards-wrapper">
-        <CourseCard id="sdsd" />
-        <CourseCard id="erer" />
-        <CourseCard id="3433" />
+        {renderCourses()}
       </section>
     </div>
   );

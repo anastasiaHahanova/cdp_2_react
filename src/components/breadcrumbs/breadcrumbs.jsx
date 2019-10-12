@@ -6,14 +6,16 @@ import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 
 import './breadcrumbs.scss';
 
-const SimpleBreadcrumbs = ({courseId}) => {
+const SimpleBreadcrumbs = ({title}) => {
   return (
     <Paper elevation={0} className="breadcrumbs">
       <Breadcrumbs aria-label="breadcrumb">
         <Link to="/courses">
           courses
           </Link>
-        <Typography color="textPrimary">How to become repteloid {courseId}</Typography>
+        <Typography color="textPrimary">
+          {title || 'create a new course'}
+        </Typography>
       </Breadcrumbs>
     </Paper>
   );
