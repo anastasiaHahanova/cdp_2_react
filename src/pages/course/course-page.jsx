@@ -30,7 +30,7 @@ const CoursePage = ({ location }) => {
       duration: '2',
       image: '',
       title: '',
-  } : courses[courseId];
+  } : courses[courses.findIndex(course => course.id === courseId)];
 
   return (
     <section>
