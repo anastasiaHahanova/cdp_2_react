@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import { connect, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -8,6 +9,10 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+
+import {
+  removeCourseAction,
+} from '../../../store';
 
 import './course-card.scss';
 
@@ -20,12 +25,21 @@ const useStyles = makeStyles({
   },
 });
 
-const CourseCard = ({ date, id, authors, imageSrc, title, description, duration }) => {
+const CourseCardComponent = ({ date, id, authors, imageSrc, title, description, duration, updateCourses }) => {
   const classes = useStyles();
   const authorsText = authors.join(' ,');
+  const dispatch = useDispatch();
+
+  const removeCourse = () => {
+    // eslint-disable-next-line no-restricted-globals
+    if(confirm(`Are u really want to delete the course: ${title}`)) {
+      dispatch(removeCourseAction(id));
+      updateCourses(id);
+    }
+  };
 
   return (
-    <div className="card">
+    <div className="card" id={id}>
       <Card className={classes.card}>
         <CardActionArea>
           <CardMedia
@@ -53,10 +67,14 @@ const CourseCard = ({ date, id, authors, imageSrc, title, description, duration 
           <Link className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall"
             to={`/courses/edit/${id}`}
           >
-          Edit
+            Edit
            </Link>
-        <Button size="small" color="primary">
-          Delete
+          <Button
+            size="small"
+            color="primary"
+            onClick={removeCourse}
+          >
+            Delete
           </Button>
         </CardActions>
       </Card>
@@ -64,4 +82,4 @@ const CourseCard = ({ date, id, authors, imageSrc, title, description, duration 
   );
 }
 
-export default CourseCard;
+export default connect()(CourseCardComponent);

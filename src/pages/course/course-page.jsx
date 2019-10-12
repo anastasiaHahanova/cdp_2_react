@@ -1,7 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+
 import SimpleBreadcrumbs from '../../components/breadcrumbs/breadcrumbs';
 import Selector from '../../components/selector/selector';
 import { authors as allAuthors } from '../../store/authors';
@@ -85,9 +87,12 @@ const CoursePage = ({ location }) => {
           <Button size="small" color="primary">
             Save
           </Button>
-          <Button size="small" color="primary">
+          <Link
+            to="/courses"
+            className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall"
+          >
             Cancel
-          </Button>
+          </Link>
         </div>
       </form>
     </section>

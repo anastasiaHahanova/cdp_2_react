@@ -72,12 +72,8 @@ const coursesCollection = new Map([
       authors,
     },
   })],
-  [REMOVE_COURSE, (state, { payload: { id } }) => {
-    const newState = {...state};
-
-    delete newState[id];
-
-    return newState;
+  [REMOVE_COURSE, (state, { payload: id }) => {
+    return Object.values(state).filter(course => course.id !== id);
   }],
   [EDIT_COURSE, (state, { payload: { id, title, description, duration, creationDate, authors } }) => ({
     ...state,

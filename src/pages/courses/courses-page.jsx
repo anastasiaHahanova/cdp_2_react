@@ -57,10 +57,17 @@ const CoursesPage = ({ match }) => {
   const courses = useSelector(selectCourses);
   const [state, setState] = useState({
     courses: courses,
+    isSearched: false,
   });
 
-  const renderCourses = () => {
-    return Object.keys(state.courses).map((key) => {
+  const updateCourses = (id) => {
+   const updatedSearch =  Object.values(state.courses).filter(course => course.id !== id);
+    setState({ ...state, courses: updatedSearch });
+    console.log(state);
+  };
+
+  const renderCourses = (courses) => {
+    return Object.keys(courses).map((key) => {
       const {
         authors,
         creationDate,
@@ -68,18 +75,20 @@ const CoursesPage = ({ match }) => {
         duration,
         image,
         title,
-      } = state.courses[key];
+        id,
+      } = courses[key];
 
       return (
         <CourseCard
-          key={key}
-          id={key}
+          key={id}
+          id={id}
           authors={authors}
           imageSrc={image}
           date={creationDate}
           description={description}
           duration={duration}
           title={title}
+          updateCourses={updateCourses}
         />
       );
     });
@@ -90,7 +99,7 @@ const CoursesPage = ({ match }) => {
       const searchWord = target.value.toLowerCase();
       const foundCourses = Object.values(courses).filter(course => course.title.toLowerCase().includes(searchWord));
 
-      setState({ ...state, courses: foundCourses });
+      setState({ ...state, courses: foundCourses, isSearched: true });
     }
   };
 
@@ -119,7 +128,7 @@ const CoursesPage = ({ match }) => {
         </Link>
       </section>
       <section className="cards-wrapper">
-        {renderCourses()}
+        {state.isSearched ? renderCourses(state.courses) : renderCourses(courses)}
       </section>
     </div>
   );
