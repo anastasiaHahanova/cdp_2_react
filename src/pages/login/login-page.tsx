@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { connect, useSelector } from 'react-redux';
-import { navigate } from 'hookrouter';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import Input from '@material-ui/core/Input';
 
 import {
   selectUser,
-  addUserAction,
+  setAuthorizedUserAction,
 } from '../../store';
 
 import './login.scss';
@@ -30,6 +29,7 @@ const LoginPage = () => {
   });
 
   const users = useSelector(selectUser);
+  const dispatch = useDispatch();
 
   const onLoginChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -69,6 +69,10 @@ const LoginPage = () => {
       isExistedUser, 
       isPasswordMatches,
     });
+
+    if (isExistedUser && isPasswordMatches) {
+      dispatch(setAuthorizedUserAction(state.login));
+    }
   };
 
   const validateForm = () => {

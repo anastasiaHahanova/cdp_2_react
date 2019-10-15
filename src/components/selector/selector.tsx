@@ -13,24 +13,18 @@ interface OptionsProps {
   options: Array<OptionProps>,
 }
 
-interface StateProps {
-  allOptions: OptionsProps,
-  activeOptions: OptionsProps | Array<[]>,
-}
-
 interface IdProp {
   id: string,
 }
 
-interface ToggleProps {
-  cancelOption: (event: React.MouseEvent<HTMLButtonElement>) => void,
-  chooseOption: (event: React.MouseEvent<HTMLButtonElement>) => void,
-}
+const Selector = ({ options, currentAuthors }: any) => {
+  const currentOptions: any = Object.values(options).filter((author:any) => {
+    return currentAuthors.some((name:any) => name === author.name)
+  });
 
-const Selector = ({ options }: OptionsProps) => {
   const [state, setState] = useState({
     allOptions: options,
-    activeOptions: [],
+    activeOptions: currentOptions || [],
   });
 
   const { allOptions, activeOptions } = state;
@@ -66,7 +60,7 @@ const Selector = ({ options }: OptionsProps) => {
   }: any) => {
     setState(state => {
       const { activeOptions } = state;
-      const updatedAllOptions = activeOptions.filter(({ id }) => id !== optionId);
+      const updatedAllOptions = activeOptions.filter((author: OptionProps) => author.id !== optionId);
 
       return {
         ...state,
@@ -90,14 +84,14 @@ const Selector = ({ options }: OptionsProps) => {
   return (
     <div className="selector">
       <ul className="selector__list">
-        {allOptions.map(option => getOption(option, chooseOption))}
+        {allOptions.map((option: OptionProps) => getOption(option, chooseOption))}
       </ul>
       <div className="selector__arrows">
         <button className="selector__arrow">{ARROW_RIGHT}</button>
         <button className="selector__arrow">{ARROW_LEFT}</button>
       </div>
       <ul className="selector__list">
-        {activeOptions.map(option => getOption(option, cancelOption))}
+        {activeOptions.map((option: OptionProps) => getOption(option, cancelOption))}
       </ul>
     </div>
   );

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import { connect, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -8,6 +9,10 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+
+import {
+  removeCourseAction,
+} from '../../../store';
 
 import './course-card.scss';
 
@@ -20,29 +25,41 @@ const useStyles = makeStyles({
   },
 });
 
-const CourseCard = ({ id }) => {
+const CourseCardComponent = ({ date, id, authors, imageSrc, title, description, duration, updateCourses }) => {
   const classes = useStyles();
+  const authorsText = authors.join(' ,');
+  const dispatch = useDispatch();
+
+  const removeCourse = () => {
+    // eslint-disable-next-line no-restricted-globals
+    if(confirm(`Are u really want to delete the course: ${title}`)) {
+      dispatch(removeCourseAction(id));
+      updateCourses(id);
+    }
+  };
 
   return (
-    <div className="card">
+    <div className="card" id={id}>
       <Card className={classes.card}>
         <CardActionArea>
           <CardMedia
             className={classes.media}
-            image="https://ezoterikabg.net/wp-content/uploads/2018/08/ezoterikabg.net-2018-%D0%A0%D0%B5%D0%BF%D1%82%D0%B8%D0%BB%D0%B8%D1%82%D0%B5-%D1%81%D0%B0-%D0%A1%D1%80%D0%B5%D0%B4-%D0%9D%D0%B0%D1%81-%D0%A1%D0%B0%D0%BC%D0%BE-%D0%B7%D0%B0-%D0%9F%D0%BE%D1%81%D0%B2%D0%B5%D1%82%D0%B5%D0%BD%D0%B8-32-1024x543.jpg"
-            title="Contemplative Reptile"
+            image={imageSrc}
+            title={title}
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
-              How to be a repteloid
+              {title}
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
-              Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-              across all continents except Antarctica
+              {description}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" component="p">
+              {authorsText}
             </Typography>
             <div className="card__time">
-              <span className="card__time-duration">15 min</span>
-              <span className="card__time-date">July 24</span>
+              <span className="card__time-duration">{duration}</span>
+              <span className="card__time-date">{date}</span>
             </div>
           </CardContent>
         </CardActionArea>
@@ -50,10 +67,14 @@ const CourseCard = ({ id }) => {
           <Link className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall"
             to={`/courses/edit/${id}`}
           >
-          Edit
+            Edit
            </Link>
-        <Button size="small" color="primary">
-          Delete
+          <Button
+            size="small"
+            color="primary"
+            onClick={removeCourse}
+          >
+            Delete
           </Button>
         </CardActions>
       </Card>
@@ -61,4 +82,4 @@ const CourseCard = ({ id }) => {
   );
 }
 
-export default CourseCard;
+export default connect()(CourseCardComponent);

@@ -1,8 +1,13 @@
-import React from 'react';
-import { Link } from "react-router-dom";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import InputBase from '@material-ui/core/InputBase';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
+
+import {
+  selectCourses,
+} from '../../store';
 
 import CourseCard from './course-card/course-card';
 import './courses-page.scss';
@@ -49,6 +54,54 @@ const useStyles = makeStyles(theme => ({
 
 const CoursesPage = ({ match }) => {
   const classes = useStyles();
+  const courses = useSelector(selectCourses);
+  const [state, setState] = useState({
+    courses: courses,
+    isSearched: false,
+  });
+
+  const updateCourses = (id) => {
+   const updatedSearch = state.courses.filter(course => course.id !== id);
+    setState({ ...state, courses: updatedSearch });
+  };
+
+  const renderCourses = (courses) => {
+    return Object.keys(courses).map((key) => {
+      const {
+        authors,
+        creationDate,
+        description,
+        duration,
+        image,
+        title,
+        id,
+      } = courses[key];
+
+      return (
+        <CourseCard
+          key={id}
+          id={id}
+          authors={authors}
+          imageSrc={image}
+          date={creationDate}
+          description={description}
+          duration={duration}
+          title={title}
+          updateCourses={updateCourses}
+        />
+      );
+    });
+  };
+
+  const handleKeypress = ({key, target}) => {
+    if(key === 'Enter'){
+      const searchWord = target.value.toLowerCase();
+      const foundCourses = courses.filter(course => course.title.toLowerCase().includes(searchWord));
+
+      setState({ ...state, courses: foundCourses, isSearched: true });
+    }
+  };
+
   return (
     <div>
       <section className="course-managing">
@@ -63,6 +116,7 @@ const CoursesPage = ({ match }) => {
               input: classes.inputInput,
             }}
             inputProps={{ 'aria-label': 'search' }}
+            onKeyPress={handleKeypress}
           />
         </div>
         <Link
@@ -73,9 +127,7 @@ const CoursesPage = ({ match }) => {
         </Link>
       </section>
       <section className="cards-wrapper">
-        <CourseCard id="sdsd" />
-        <CourseCard id="erer" />
-        <CourseCard id="3433" />
+        {state.isSearched ? renderCourses(state.courses) : renderCourses(courses)}
       </section>
     </div>
   );
