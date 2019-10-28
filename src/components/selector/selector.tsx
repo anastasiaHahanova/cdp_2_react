@@ -17,9 +17,15 @@ interface IdProp {
   id: string,
 }
 
-const Selector = ({ options, currentAuthors }: any) => {
-  const currentOptions: any = Object.values(options).filter((author:any) => {
-    return currentAuthors.some((name:any) => name === author.name)
+const Selector = (props: any) => {
+  const {
+    options,
+    currentAuthors,
+    handleValue,
+  }: any = props;
+
+  const currentOptions: any = Object.values(options).filter((author: any) => {
+    return currentAuthors.some((name: any) => name === author.name)
   });
 
   const [state, setState] = useState({
@@ -29,28 +35,44 @@ const Selector = ({ options, currentAuthors }: any) => {
 
   const { allOptions, activeOptions } = state;
 
+  const getStateAfterChoosing = (optionText: string, optionId: string) => {
+    const { activeOptions } = state;
+
+    if (activeOptions.some(({ id }: IdProp) => id === optionId)) {
+      return state;
+    }
+
+    return {
+      ...state,
+      activeOptions: [
+        ...activeOptions, {
+          name: optionText,
+          id: optionId,
+        },
+      ],
+    };
+  };
+
   const chooseOption = ({ target }: React.MouseEvent<HTMLButtonElement>) => {
     const {
       textContent: optionText,
       id: optionId,
     }: any = target;
 
-    setState((state: any) => {
-      const { activeOptions } = state;
-      if (activeOptions.some(({ id }: IdProp) => id === optionId)) {
-        return state;
-      }
+    const newState = getStateAfterChoosing(optionText, optionId);
 
-      return {
-        ...state,
-        activeOptions: [
-          ...activeOptions, {
-            name: optionText,
-            id: optionId,
-          },
-        ],
-      };
-    });
+    setState(newState);
+    handleValue(newState.activeOptions);
+  };
+
+  const getStateAfterCancelling = (optionId: string) => {
+    const { activeOptions } = state;
+    const updatedAllOptions = activeOptions.filter((author: OptionProps) => author.id !== optionId);
+
+    return {
+      ...state,
+      activeOptions: updatedAllOptions,
+    };
   };
 
   const cancelOption = ({
@@ -58,15 +80,9 @@ const Selector = ({ options, currentAuthors }: any) => {
       id: optionId,
     },
   }: any) => {
-    setState(state => {
-      const { activeOptions } = state;
-      const updatedAllOptions = activeOptions.filter((author: OptionProps) => author.id !== optionId);
-
-      return {
-        ...state,
-        activeOptions: updatedAllOptions,
-      };
-    });
+    const newState = getStateAfterCancelling(optionId);
+    setState(newState);
+    handleValue(newState.activeOptions);
   };
 
   const getOption = ({ name, id }: OptionProps, handler: any) => {

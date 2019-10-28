@@ -63,26 +63,30 @@ const initialState = [
 
 const coursesCollection = new Map([
   [ADD_COURSE, (state, { payload }) => {
-    const index = state.findIndex(course => course.id === payload.id);
-
-    state[index] = {
-      ...state[index],
-      payload,
-    };
+    return [
+      ...state,
+      {
+        ...payload,
+        id: Date.now(),
+      },
+    ]
   }],
   [REMOVE_COURSE, (state, { payload: id }) => {
     return state.filter(course => course.id !== id);
   }],
-  [EDIT_COURSE, (state, { payload: { id, title, description, duration, creationDate, authors } }) => ({
-    ...state,
-    [id]: {
-      title,
-      description,
-      duration,
-      creationDate,
-      authors,
-    },
-  })],
+  [EDIT_COURSE, (state, { payload }) => {
+    let currentIndex;
+
+    state.find((course, index) => {
+      if(course.id === payload.id) {
+        currentIndex = index;
+      }
+    });
+
+    state[currentIndex] = { ...payload };
+
+    return state;
+  }],
 ]);
 
 export const courses = (state = initialState, action) => {
