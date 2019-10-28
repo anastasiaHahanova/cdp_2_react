@@ -61,7 +61,7 @@ const CoursesPage = ({ match }) => {
   });
 
   const updateCourses = (id) => {
-   const updatedSearch = state.courses.filter(course => course.id !== id);
+    const updatedSearch = state.courses.filter(course => course.id !== id);
     setState({ ...state, courses: updatedSearch });
   };
 
@@ -93,8 +93,8 @@ const CoursesPage = ({ match }) => {
     });
   };
 
-  const handleKeypress = ({key, target}) => {
-    if(key === 'Enter'){
+  const handleKeypress = ({ key, target }) => {
+    if (key === 'Enter') {
       const searchWord = target.value.toLowerCase();
       const foundCourses = courses.filter(course => course.title.toLowerCase().includes(searchWord));
 

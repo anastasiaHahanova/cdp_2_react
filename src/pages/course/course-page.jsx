@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { connect, useDispatch } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
@@ -10,6 +11,8 @@ import { authors as allAuthors } from '../../store/authors';
 
 import {
   selectCourses,
+  addCourseAction,
+  editCourseAction,
 } from '../../store';
 
 import './course-page.scss';
@@ -17,20 +20,56 @@ import './course-page.scss';
 const getTodayDate = () => {
   var today = new Date();
 
-  return today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+  return today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
 };
 
-const CoursePage = ({ location }) => {
+const CoursePage = ({ history, location }) => {
   const courseId = location.pathname.split('/').pop();
   const courses = useSelector(selectCourses);
+  const dispatch = useDispatch();
   const data = courseId === 'new' ? {
-      authors: [],
-      creationDate: getTodayDate(),
-      description: '',
-      duration: '2',
-      image: '',
-      title: '',
+    authors: [],
+    creationDate: getTodayDate(),
+    description: '',
+    duration: '2',
+    image: '',
+    title: '',
   } : courses[courses.findIndex(course => course.id === courseId)];
+
+  const [state, setState] = useState(data);
+
+  const handleSaveBtn = () => {
+    const {
+      authors,
+      creationDate,
+      description,
+      duration,
+      image,
+      title,
+    } = state;
+
+    if (!creationDate || !description || !duration || !image || !title || !authors.length) {
+      alert('Please fullfill all fields');
+      return;
+    } else if (courseId === 'new') {
+      dispatch(addCourseAction(state));
+    } else {
+      dispatch(editCourseAction({...state, id: courseId }));
+    }
+
+    history.push('/courses');
+  };
+
+  const onChangeField = ({ target: { value, id } }) => {
+    setState({ ...state, [id]: value });
+  };
+
+  const onClickSelector = (activeAuthors) => {
+    let authors = [];
+
+    activeAuthors.forEach((author) => { authors.push(author.name) });
+    setState({ ...state, authors });
+  };
 
   return (
     <section>
@@ -38,30 +77,34 @@ const CoursePage = ({ location }) => {
       <form>
         <div className="course-form__container">
           <TextField
-            id="standard-uncontrolled"
+            id="title"
             label="Name"
-            defaultValue={data.title}
+            defaultValue={state.title}
             margin="normal"
+            onChange={onChangeField}
           />
           <TextField
-            id="standard-uncontrolled"
+            id="image"
             label="Image"
             type="textarea"
-            defaultValue={data.image}
+            defaultValue={state.image}
             margin="normal"
+            onChange={onChangeField}
           />
           <TextField
             id="date"
             label="Date"
             type="date"
-            defaultValue={data.creationDate}
+            defaultValue={state.creationDate}
+            onChange={onChangeField}
           />
           <TextField
-            id="standard-uncontrolled"
+            id="duration"
             label="Duration"
             type="number"
-            defaultValue={data.duration}
+            defaultValue={state.duration}
             margin="normal"
+            onChange={onChangeField}
           />
         </div>
 
@@ -71,20 +114,30 @@ const CoursePage = ({ location }) => {
         >
           Description
         </label>
-        
+
         <textarea
+          id="description"
           className="course-form__description"
           htmlFor="description"
           placeholder="write..."
-          defaultValue={data.description}
+          defaultValue={state.description}
+          onChange={onChangeField}
         >
         </textarea>
 
         <legend className="course-form__description-title">Authors' List</legend>
-        <Selector options={allAuthors} currentAuthors={data.authors} />
+        <Selector
+          options={allAuthors}
+          currentAuthors={state.authors}
+          handleValue={onClickSelector}
+        />
 
         <div className="course-form__buttons">
-          <Button size="small" color="primary">
+          <Button
+            size="small"
+            color="primary"
+            onClick={handleSaveBtn}
+          >
             Save
           </Button>
           <Link
@@ -99,4 +152,4 @@ const CoursePage = ({ location }) => {
   );
 };
 
-export default CoursePage;
+export default connect()(CoursePage);
